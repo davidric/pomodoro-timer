@@ -36,12 +36,13 @@ export function sessionChange(message) {
 //
 
 // Time Timer
-export function timeRun(isSession, session, newSession) {
+export function timeRun(isSession, current, newSession, newBreakTime) {
 	return {
 		type: 'TIME_RUN',
 		isSession,
-		session,
-		newSession
+		current,
+		newSession,
+		newBreakTime
 	}
 }
 

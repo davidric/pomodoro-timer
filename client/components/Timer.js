@@ -6,13 +6,7 @@ const audioSession = new Audio('https://www.zapsplat.com/wp-content/uploads/2015
 const Timer = React.createClass({
 	
 	iteration: 0,
-	session: 2,
-	newSession: 2,
-	breakTime: 1,
-	longBreakTime: 3,
-	current: 0,
 	isActive: false,
-	// isSession: true,
 	n: 1,
 	keepGoing: true,
 	
@@ -24,15 +18,18 @@ const Timer = React.createClass({
 		e.preventDefault();
 		let active = this.isActive === true ? false : true;
 		this.isActive = active;
-		this.session = this.refs.session.value === '' ? this.session: this.refs.session.value;
-		this.breakTime = this.refs.shortBreak.value === '' ? this.breakTime: this.refs.shortBreak.value;
-		this.longBreakTime = this.refs.longBreak.value === '' ? this.longBreakTime: this.refs.longBreak.value;
-		this.newSession= this.session;
-		this.newBreakTime= this.breakTime;
+		this.session = this.refs.session.value === '' ? this.props.time.session: this.refs.session.value;
+		this.breakTime = this.refs.shortBreak.value === '' ? this.props.time.breakTime: this.refs.shortBreak.value;
+		this.longBreakTime = this.refs.longBreak.value === '' ? this.props.time.longBreakTime: this.refs.longBreak.value;
+
+		const sC = this.props.time.isSession;
+		const cR = this.props.time.current;
+		const nS = this.session;
+		const nBT = this.breakTime;
+		this.props.timeRun(sC, cR, nS, nBT);
 		audioSession.play();
 		const buttons = "Stop";
 		this.props.startTimer(buttons);
-
 		this.keepGoing = true;
 		ReactDOM.findDOMNode(this.refs.stop).innerHTML = buttons;
 		var that = this;
@@ -70,18 +67,26 @@ const Timer = React.createClass({
 	    const msg = "Session";
 	    this.props.resetTimer(btn, msg);
 	    ReactDOM.findDOMNode(this.refs.stop).innerHTML = buttons.stop;
-	    ReactDOM.findDOMNode(this.refs.timer).innerHTML = this.session + ':' + '00';
+	    ReactDOM.findDOMNode(this.refs.timer).innerHTML = this.props.time.session + ':' + '00';
 	    ReactDOM.findDOMNode(this.refs.message).innerHTML = buttons.message;
 	    this.current = 0;
 	    this.n = 1;
 	    this.isActive = false;
-	    // this.isSession = true;
+	    const sC = true;
+		const cR = 0;
+		const nS = this.props.time.session;
+		const nBT = this.props.time.breakTime;
+		this.props.timeRun(sC, cR, nS, nBT);
 	},
 		
 	render() {
 		
 		var that = this;
-		const { buttons } = this.props;
+		const { buttons, time } = this.props;
+		const current = this.props.time.current>9 ? this.props.time.current : "0" + this.props.time.current;
+		const str = this.props.time.newSession + ':' + current;
+		const strBreak = (this.props.time.newBreakTime) + ':' + current;
+		const displayTime = this.props.time.isSession ? str : strBreak;
 
 		return (
 			<div className='pomodoro'>
@@ -103,7 +108,7 @@ const Timer = React.createClass({
 					<div className='center timer'>
 						<div className='center info'>
 							<h2 ref="message" className='center'>{buttons.message}</h2>
-							<p ref="timer" className='center'></p>
+							<p ref="timer" className='center'>{displayTime}</p>
 						</div>
 					</div>
 				</form>
@@ -117,18 +122,25 @@ const Timer = React.createClass({
 		ReactDOM.findDOMNode(this.refs.message).innerHTML = buttons.message ;
 		let { current,newSession,newBreakTime,isActive, keepGoing } = this;
 		newSession
-		if( (this.newSession === 0 && this.current === 0) || (this.newBreakTime === 0 && this.current === 0)){
+		if( (this.props.time.newSession === 0 && this.props.time.current === 0) || (this.props.time.newBreakTime === 0 && this.props.time.current === 0)){
 			this.n = this.n + 1;
 			var sessionCheck = this.isSession === true ? false : true;
-			var sC = this.props.time.isSession === true ? false : true;
 			this.isSession = sessionCheck;
-			this.props.timeRun(sC);
-			this.newSession = this.session;
-			this.newBreakTime = this.breakTime;
-			const time = this.props.time;
+			const sC = this.props.time.isSession === true ? false : true;
+			const cR = this.props.time.current;
+			const nS = this.session;
+			const nBT = this.breakTime;
+			this.props.timeRun(sC, cR, nS, nBT);
+
 			if (this.n % 8 === 0) {
-				this.newBreakTime = this.longBreakTime;
-				newBreakTime = this.longBreakTime
+
+				const sC = this.props.time.isSession;
+				const cR = this.props.time.current;
+				const nS = this.props.time.newSession;
+				const nBT = this.longBreakTime;
+				this.props.timeRun(sC, cR, nS, nBT);
+
+
 				console.log('Long Break' + '\n\n');
 			}
 			else {
@@ -152,33 +164,39 @@ const Timer = React.createClass({
 			}	
 		}
 		if( this.isActive ){
-			const { time } = this.props;
 			if (this.props.time.isSession) {
-				if(this.current !== 0){
-					this.current--;
+				if(this.props.time.current !== 0){
+					const sC = this.props.time.isSession;
+					const cR = this.props.time.current - 1;
+					const nS = this.props.time.newSession;
+					const nBT = this.props.time.newBreakTime;
+					this.props.timeRun(sC, cR, nS, nBT);
 				}
 				else{
-					this.current = 1;
-					this.newSession--;
+					const sC = this.props.time.isSession;
+					const cR = 59;
+					const nS = this.props.time.newSession - 1;
+					const nBT = this.props.time.newBreakTime;
+					this.props.timeRun(sC, cR, nS, nBT);
 				}	
 			}
 			else {
-				if(this.current !== 0){
-					this.current--;
+				if(this.props.time.current !== 0){
+					const sC = this.props.time.isSession;
+					const cR = this.props.time.current - 1;
+					const nS = this.props.time.newSession;
+					const nBT = this.props.time.newBreakTime;
+					this.props.timeRun(sC, cR, nS, nBT);
 				}
 				else{
-					this.current = 1;
-					this.newBreakTime--;
+					const sC = this.props.time.isSession;
+					const cR = 59;
+					const nS = this.props.time.newSession;
+					const nBT = this.props.time.newBreakTime - 1;
+					this.props.timeRun(sC, cR, nS, nBT);
 				}
 			}
 		}
-		
-		current = current>9 ? current : "0" + current;
-		var str = newSession + ':' + current;
-		var strBreak = newBreakTime + ':' + current;
-		str = this.props.time.isSession ? str : strBreak;
-		
-		ReactDOM.findDOMNode(this.refs.timer).innerHTML = str;
 	}
 	
 });

@@ -1,22 +1,24 @@
 {
-  "name": "learn-redux",
+  "name": "pomodoro-timer",
   "version": "1.0.0",
   "description": ":) ",
   "scripts": {
     "build:webpack": "NODE_ENV=production webpack --config webpack.config.prod.js",
     "build": "npm run clean && npm run build:webpack",
     "test": "NODE_ENV=production mocha './tests/**/*.spec.js' --compilers js:babel-core/register",
+    "testis": "set NODE_ENV=development node foo.js",
     "clean": "rimraf dist",
     "start": "node devServer.js",
-    "tunnel": "browser-sync start --proxy localhost:7770 --tunnel wesbos"
+    "tunnel": "browser-sync start --proxy localhost:7770 --tunnel wesbos",
+    "deploy" : "npm run build&&gh-pages -d build"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/wesbos/Learn-Redux.git"
+    "url": "https://github.com/davidric/pomodoro-timer.git"
   },
-  "author": "Wes Bos",
+  "author": "David Ricardo",
   "license": "MIT",
-  "homepage": "https://github.com/wesbos/Learn-Redux",
+  "homepage": "https://davidric.github.io/pomodoro-timer",
   "dependencies": {
     "babel-core": "^6.7.7",
     "babel-eslint": "^6.0.4",
@@ -54,6 +56,7 @@
   "devDependencies": {
     "expect": "^1.18.0",
     "expect-jsx": "^2.5.1",
+    "gh-pages": "^1.1.0",
     "mocha": "^2.4.5",
     "react-addons-test-utils": "^15.0.2"
   }

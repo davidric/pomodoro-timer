@@ -1,9 +1,10 @@
 const time = {
 	"isSession": true,
-	"session": 2,
-	"newSession": 2,
-	"breakTime": 1,
-	"longBreakTime": 3,
+	"session": 25,
+	"newSession": 25,
+	"breakTime": 5,
+	"newBreakTime": 5,
+	"longBreakTime": 15,
 	"current": 0,
 }
 
