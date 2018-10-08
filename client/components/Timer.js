@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-// const audioSession = new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_bell_small_reception_desk_bell_single_ring_005_15127.mp3?_=1');
-const audioSession = document.getElementById("myAudio");
+const audioSession = new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_bell_small_reception_desk_bell_single_ring_005_15127.mp3?_=1');
+// const audioSession = document.getElementById("myAudio");
 
 const Timer = React.createClass({
 	
@@ -17,7 +17,7 @@ const Timer = React.createClass({
 
 	handleTimerClick(e) {
 		e.preventDefault();
-		let active = this.isActive === true ? false : true;
+		let active = !this.isActive;
 		this.isActive = active;
 		this.session = this.refs.session.value === '' ? this.props.time.session: this.refs.session.value;
 		this.breakTime = this.refs.shortBreak.value === '' ? this.props.time.breakTime: this.refs.shortBreak.value;
@@ -29,7 +29,7 @@ const Timer = React.createClass({
 		const nBT = this.breakTime;
 		this.props.timeRun(sC, cR, nS, nBT);
 		audioSession.play();
-		const buttons = "Stop";
+		const buttons = 'Stop';
 		this.props.startTimer(buttons);
 		this.keepGoing = true;
 		ReactDOM.findDOMNode(this.refs.stop).innerHTML = buttons;
@@ -55,17 +55,17 @@ const Timer = React.createClass({
 
 	handleTimerStop(e){
 		const { buttons } = this.props;
-		const btn = this.props.buttons.stop === "Stop" ? "Resume" : "Stop";
+		const btn = this.props.buttons.stop === 'Stop' ? 'Resume' : 'Stop';
 		this.props.stopTimer(btn);
-	    this.keepGoing = this.keepGoing === true ? false : true;
+	    this.keepGoing = !this.keepGoing;
 	    ReactDOM.findDOMNode(this.refs.stop).innerHTML = buttons.stop;
 	},
 
 	handleTimerReset(e){
-		const { buttons } = this.props
+		const { buttons } = this.props;
 	    this.refs.settingTimer.reset();
-	    const btn = "Stop";
-	    const msg = "Session";
+	    const btn = 'Stop';
+	    const msg = 'Session';
 	    this.props.resetTimer(btn, msg);
 	    ReactDOM.findDOMNode(this.refs.stop).innerHTML = buttons.stop;
 	    ReactDOM.findDOMNode(this.refs.timer).innerHTML = this.props.time.session + ':' + '00';
@@ -84,7 +84,7 @@ const Timer = React.createClass({
 		
 		var that = this;
 		const { buttons, time } = this.props;
-		const current = this.props.time.current>9 ? this.props.time.current : "0" + this.props.time.current;
+		const current = this.props.time.current>9 ? this.props.time.current : '0' + this.props.time.current;
 		const str = this.props.time.newSession + ':' + current;
 		const strBreak = (this.props.time.newBreakTime) + ':' + current;
 		const displayTime = this.props.time.isSession ? str : strBreak;
@@ -125,9 +125,9 @@ const Timer = React.createClass({
 		newSession
 		if( (this.props.time.newSession === 0 && this.props.time.current === 0) || (this.props.time.newBreakTime === 0 && this.props.time.current === 0)){
 			this.n = this.n + 1;
-			var sessionCheck = this.isSession === true ? false : true;
+			var sessionCheck = !this.isSession;
 			this.isSession = sessionCheck;
-			const sC = this.props.time.isSession === true ? false : true;
+			const sC = !this.props.time.isSession;
 			const cR = this.props.time.current;
 			const nS = this.session;
 			const nBT = this.breakTime;
@@ -148,17 +148,17 @@ const Timer = React.createClass({
 				this.n % 2 === 0 ? console.log('Short Break') : console.log('Session');
 			}
 			if (this.props.time.isSession) {
-				const msg = "Session";
+				const msg = 'Session';
 			    this.props.sessionChange(msg);
 				audioSession.play();
 			}
 			else {
 				if (this.n % 8 === 0) {
-					const msg = "Long Break";
+					const msg = 'Long Break';
 				    this.props.sessionChange(msg);
 				}
 				else {
-				    const msg = "Short Break";
+				    const msg = 'Short Break';
 				    this.props.sessionChange(msg);							
 				}
 				audioSession.play();
