@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const audioSession = new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_bell_small_reception_desk_bell_single_ring_005_15127.mp3?_=1');
-// const audioSession = document.getElementById("myAudio");
+// For development
+// const audioSession = new Audio('https://www.zapsplat.com/wp-content/uploads/2015/sound-effects-14566/zapsplat_bell_small_reception_desk_bell_single_ring_005_15127.mp3?_=1');
+// For production
+const audioSession = document.getElementById('myAudio');
 
 const Timer = React.createClass({
 	
